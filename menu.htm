@@ -52,6 +52,18 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
 
 <body>
     <div class="piano">
+<div class="key" data-note="65.41"></div><!-- C2 -->
+<div class="key black" data-note="69.30"></div>
+<div class="key" data-note="73.42"></div><!-- D2 -->
+<div class="key black" data-note="77.78"></div>
+<div class="key" data-note="82.41"></div><!-- E2 -->
+<div class="key" data-note="87.31"></div><!-- F2 -->
+<div class="key black" data-note="92.50"></div>
+<div class="key" data-note="98.00"></div><!-- G2 -->
+<div class="key black" data-note="103.83"></div>
+<div class="key" data-note="110.00"></div><!-- A2 -->
+<div class="key black" data-note="116.54"></div>
+<div class="key" data-note="123.47"></div><!-- B2 -->
         <!-- ──── 【1オクターブ低い】C3 ～ B3 ──── -->
         <div class="key" data-note="130.81"></div><!-- C3 -->
         <div class="key black" data-note="138.59"></div>
@@ -95,12 +107,12 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
         <div class="key" data-note="987.77"></div><!-- B5 -->
     </div>
     <script>
-const sampleRate = 44100;
+const sampleRate = 40100;
 let audioCtx = null;
 
 // 現在選択されているアルゴリズムの番号（1〜4）
 // UIのボタンなどからこの数値を変更できるようにします
-let currentAlgorithm = 1; 
+let currentAlgorithm = 2; 
 
 document.querySelectorAll('.key').forEach(key => {
     key.addEventListener('mousedown', () => {
@@ -112,10 +124,10 @@ document.querySelectorAll('.key').forEach(key => {
 
         // 各オペレーターのパラメータ（配列のインデックス: 0=OP1, 1=OP2, 2=OP3, 3=OP4）
         const ops = [
-            { phase: 9, freq: 0, ml: 1.0, tl: 0.7 }, // OP1
-            { phase: 0, freq: 0, ml: 2, tl: 0.8 }, // OP2
-            { phase: 0, freq: 0, ml: 1.0, tl: 0.5 }, // OP3
-            { phase: 0, freq: 9, ml: 5.0, tl: 0.1 }  // OP4
+            { phase: 9, freq: 0, ml: 1.0, tl: 1.4 }, // OP1
+            { phase: 0, freq: 0, ml: 1.001, tl: 0.2 }, // OP2
+            { phase: 0, freq: 0, ml: 5.001, tl: 1.5 }, // OP3
+            { phase: 0, freq: 0, ml: 9.001, tl: 2 }  // OP4
         ];
 
         const baseFreq = parseFloat(key.dataset.note); 
