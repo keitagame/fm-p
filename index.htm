@@ -2,19 +2,66 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>FM SYNTH</title>
+    <title>FM SYNTH - Editable</title>
     <style>
-body {  height: 100vh; background-color: #ffffff; margin: 0; }
+        body { 
+            font-family: sans-serif;
+            background-color: #f4f4f9; 
+            margin: 0; 
+            padding: 20px;
+        }
         
+        /* コントロールパネルのスタイル */
+        .controls {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .op-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .op-card {
+            background: #eee;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .op-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+
+        .param {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .param input {
+            width: 100%;
+        }
         
+        /* ピアノのスタイル */
         .piano {
             display: flex;
             position: relative;
-          
             padding: 10px;
+            background: #ffffff00;
             border-radius: 8px;
-            
             white-space: nowrap;
+            width: max-content;
         }
 
         /* 白鍵のスタイル */
@@ -47,12 +94,90 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
         .key.black:active {
             background-color: #444;
         }
-          </style>
+    </style>
 </head>
 
 <body>
+
+    <!-- コントロールパネル -->
+    <div class="controls">
+        <div class="control-group">
+            <label for="algo-select"><strong>アルゴリズム選択:</strong></label>
+            <select id="algo-select">
+                <option value="1">1: 直列4段 (4 -> 3 -> 2 -> 1)</option>
+                <option value="2">2: 2並列の直列2段 ((4->3) + (2->1))</option>
+                <option value="3" selected>3: 3モジュレーター -> 1キャリア ((4+3+2) -> 1)</option>
+                <option value="4">4: 4並列オルガン (4 + 3 + 2 + 1)</option>
+            </select>
+        </div>
+
+        <div class="op-controls">
+            <!-- OP1 -->
+            <div class="op-card">
+                <h3>OP 1 (Carrier)</h3>
+                <div class="param">
+                    <label>ML (倍率): <span id="op0-ml-val">0.0</span></label>
+                    <input type="range" id="op0-ml" min="0" max="16" step="0.5" value="0.0">
+                </div>
+                <div class="param">
+                    <label>TL (音量): <span id="op0-tl-val">1.4</span></label>
+                    <input type="range" id="op0-tl" min="0" max="3" step="0.1" value="1.4">
+                </div>
+            </div>
+            <!-- OP2 -->
+            <div class="op-card">
+                <h3>OP 2</h3>
+                <div class="param">
+                    <label>ML (倍率): <span id="op1-ml-val">1.0</span></label>
+                    <input type="range" id="op1-ml" min="0" max="16" step="0.5" value="1.0">
+                </div>
+                <div class="param">
+                    <label>TL (音量): <span id="op1-tl-val">0.2</span></label>
+                    <input type="range" id="op1-tl" min="0" max="3" step="0.1" value="0.2">
+                </div>
+            </div>
+            <!-- OP3 -->
+            <div class="op-card">
+                <h3>OP 3</h3>
+                <div class="param">
+                    <label>ML (倍率): <span id="op2-ml-val">2.0</span></label>
+                    <input type="range" id="op2-ml" min="0" max="16" step="0.5" value="2.0">
+                </div>
+                <div class="param">
+                    <label>TL (音量): <span id="op2-tl-val">1.5</span></label>
+                    <input type="range" id="op2-tl" min="0" max="3" step="0.1" value="1.5">
+                </div>
+            </div>
+            <!-- OP4 -->
+            <div class="op-card">
+                <h3>OP 4</h3>
+                <div class="param">
+                    <label>ML (倍率): <span id="op3-ml-val">8.0</span></label>
+                    <input type="range" id="op3-ml" min="0" max="16" step="0.5" value="8.0">
+                </div>
+                <div class="param">
+                    <label>TL (音量): <span id="op3-tl-val">1.0</span></label>
+                    <input type="range" id="op3-tl" min="0" max="3" step="0.1" value="1.0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 鍵盤 -->
     <div class="piano">
-        <!-- ──── 【1オクターブ低い】C3 ～ B3 ──── -->
+        <div class="key" data-note="65.41"></div><!-- C2 -->
+        <div class="key black" data-note="69.30"></div>
+        <div class="key" data-note="73.42"></div><!-- D2 -->
+        <div class="key black" data-note="77.78"></div>
+        <div class="key" data-note="82.41"></div><!-- E2 -->
+        <div class="key" data-note="87.31"></div><!-- F2 -->
+        <div class="key black" data-note="92.50"></div>
+        <div class="key" data-note="98.00"></div><!-- G2 -->
+        <div class="key black" data-note="103.83"></div>
+        <div class="key" data-note="110.00"></div><!-- A2 -->
+        <div class="key black" data-note="116.54"></div>
+        <div class="key" data-note="123.47"></div><!-- B2 -->
+        
         <div class="key" data-note="130.81"></div><!-- C3 -->
         <div class="key black" data-note="138.59"></div>
         <div class="key" data-note="146.83"></div><!-- D3 -->
@@ -66,7 +191,6 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
         <div class="key black" data-note="233.08"></div>
         <div class="key" data-note="246.94"></div><!-- B3 -->
 
-        <!-- ──── 【真ん中】C4 ～ B4 ──── -->
         <div class="key" data-note="261.63"></div><!-- C4 -->
         <div class="key black" data-note="277.18"></div>
         <div class="key" data-note="293.66"></div><!-- D4 -->
@@ -80,7 +204,6 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
         <div class="key black" data-note="466.16"></div>
         <div class="key" data-note="493.88"></div><!-- B4 -->
 
-        <!-- ──── 【1オクターブ高い】C5 ～ B5 ──── -->
         <div class="key" data-note="523.25"></div><!-- C5 -->
         <div class="key black" data-note="554.37"></div>
         <div class="key" data-note="587.33"></div><!-- D5 -->
@@ -94,80 +217,191 @@ body {  height: 100vh; background-color: #ffffff; margin: 0; }
         <div class="key black" data-note="932.33"></div>
         <div class="key" data-note="987.77"></div><!-- B5 -->
     </div>
-    <script>
-const sampleRate = 44100;
+<!-- 既存のコントロールパネル（controls）の下、かつピアノ（piano）の上あたりに追加 -->
+    <div style="margin: 20px 0; text-align: center;">
+        <canvas id="oscilloscope" width="600" height="150" style="background: #111; border-radius: 6px; box-shadow: inset 0 0 10px #000; display: block; margin: 0 auto;"></canvas>
+    </div>
+<script>
+const sampleRate = 40100;
 let audioCtx = null;
-document.querySelectorAll('.key').forEach(key => {
-            key.addEventListener('mousedown', () => {
-                
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  const bufferSize = 1024;
-  const node = audioCtx.createScriptProcessor(bufferSize, 1, 1);
-
-  
-  const ops = [];
-  for (let i = 0; i < 4; i++) {
-    ops.push({
-      phase: 0,
-      freq: 0,
-      amp: 0,
+let analyser = null;
+let canvas = document.getElementById('oscilloscope');
+let canvasCtx = canvas.getContext('2d');
+let animationFrameId = null;
+// UIのスライダーの値を画面上のテキストにリアルタイム反映する処理
+const inputs = document.querySelectorAll('.param input');
+inputs.forEach(input => {
+    input.addEventListener('input', (e) => {
+        document.getElementById(`${e.target.id}-val`).textContent = e.target.value;
     });
-  }
+});
 
-  const baseFreq = key.dataset.note; 
-  ops[0].freq = baseFreq * 1.0;
-  ops[1].freq = baseFreq * 2.0;
-  ops[2].freq = baseFreq * 3.0;
-  ops[3].freq = baseFreq * 4.0;
+document.querySelectorAll('.key').forEach(key => {
+    key.addEventListener('mousedown', () => {
+        
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // --- 【追加】初回クリック時にアナライザーを初期化して描画を開始 ---
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 2048;
+            analyser.connect(audioCtx.destination);
+            draw(); // 描画ループを開始
+            // -------------------------------------------------------------
+        }
+        const bufferSize = 1024;
+        const node = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
-  const noteLenSec = 1;
-  const totalSamples = Math.floor(noteLenSec * sampleRate);
-  let writtenSamples = 0;
+        // UI（input）から現在の設定値をリアルタイムに取得
+        const currentAlgorithm = parseInt(document.getElementById('algo-select').value);
+        
+        const ops = [
+            { phase: 0, freq: 0, ml: parseFloat(document.getElementById('op0-ml').value), tl: parseFloat(document.getElementById('op0-tl').value) }, // OP1
+            { phase: 0, freq: 0, ml: parseFloat(document.getElementById('op1-ml').value), tl: parseFloat(document.getElementById('op1-tl').value) }, // OP2
+            { phase: 0, freq: 0, ml: parseFloat(document.getElementById('op2-ml').value), tl: parseFloat(document.getElementById('op2-tl').value) }, // OP3
+            { phase: 0, freq: 0, ml: parseFloat(document.getElementById('op3-ml').value), tl: parseFloat(document.getElementById('op3-tl').value) }  // OP4
+        ];
 
-  node.onaudioprocess = (e) => {
-    const out = e.outputBuffer.getChannelData(0);
-    const len = out.length;
+        const baseFreq = parseFloat(key.dataset.note); 
+        
+        // ML（倍率）を基準周波数に適用
+        for (let j = 0; j < 4; j++) {
+            ops[j].freq = baseFreq * ops[j].ml;
+        }
 
-    for (let i = 0; i < len; i++) {
-      if (writtenSamples >= totalSamples) {
-        out[i] = 0;
-        continue;
-      }
+        const noteLenSec = 1;
+        const totalSamples = Math.floor(noteLenSec * sampleRate);
+        let writtenSamples = 0;
 
-      const t = writtenSamples / sampleRate;
+        node.onaudioprocess = (e) => {
+            const out = e.outputBuffer.getChannelData(0);
+            const len = out.length;
 
-      
-      const env = Math.exp(-t * 3.0); 
+            for (let i = 0; i < len; i++) {
+                if (writtenSamples >= totalSamples) {
+                    out[i] = 0;
+                    continue;
+                }
 
-      
-      for (let j = 0; j < 4; j++) {
-        const op = ops[j];
-        const phaseInc = 2 * Math.PI * op.freq / sampleRate;
-        op.phase += phaseInc;
-      }
+                const t = writtenSamples / sampleRate;
+                const env = Math.exp(-t * 3.0); // 簡易エンベロープ
 
-      
-      const op3 = Math.sin(ops[3].phase) * 1.0;
-      const op2 = Math.sin(ops[2].phase + op3 * 2.0);   
-      const op1 = Math.sin(ops[1].phase + op2 * 2.0);
-      const op0 = Math.sin(ops[0].phase + op1 * 2.0);
+                // 位相の更新
+                for (let j = 0; j < 4; j++) {
+                    ops[j].phase += (2 * Math.PI * ops[j].freq) / sampleRate;
+                }
 
-      const sample = op0 * env * 0.4; 
+                const modScale = 3.5; // 変調の深さのベース
+                let finalSample = 0;
 
-      out[i] = sample;
-      writtenSamples++;
-    }
+                let s0, s1, s2, s3;
 
+                // 【アルゴリズム分岐処理】
+                switch (currentAlgorithm) {
+                    case 1:
+                        s3 = Math.sin(ops[3].phase) * ops[3].tl;
+                        s2 = Math.sin(ops[2].phase + s3 * modScale) * ops[2].tl;
+                        s1 = Math.sin(ops[1].phase + s2 * modScale) * ops[1].tl;
+                        s0 = Math.sin(ops[0].phase + s1 * modScale) * ops[0].tl;
+                        finalSample = s0;
+                        break;
+
+                    case 2:
+                        s3 = Math.sin(ops[3].phase) * ops[3].tl;
+                        s2 = Math.sin(ops[2].phase + s3 * modScale) * ops[2].tl;
+                        
+                        s1 = Math.sin(ops[1].phase) * ops[1].tl;
+                        s0 = Math.sin(ops[0].phase + s1 * modScale) * ops[0].tl;
+                        
+                        finalSample = s2 + s0;
+                        break;
+
+                    case 3:
+                        s3 = Math.sin(ops[3].phase) * ops[3].tl;
+                        s2 = Math.sin(ops[2].phase) * ops[2].tl;
+                        s1 = Math.sin(ops[1].phase) * ops[1].tl;
+                        
+                        s0 = Math.sin(ops[0].phase + (s3 + s2 + s1) * modScale) * ops[0].tl;
+                        finalSample = s0;
+                        break;
+
+                    case 4:
+                        s3 = Math.sin(ops[3].phase) * ops[3].tl;
+                        s2 = Math.sin(ops[2].phase) * ops[2].tl;
+                        s1 = Math.sin(ops[1].phase) * ops[1].tl;
+                        s0 = Math.sin(ops[0].phase) * ops[0].tl;
+                        
+                        finalSample = s3 + s2 + s1 + s0;
+                        break;
+
+                    default:
+                        s0 = Math.sin(ops[0].phase) * ops[0].tl;
+                        finalSample = s0;
+                }
+
+                const sample = finalSample * env * 0.4; 
+
+                out[i] = sample;
+                writtenSamples++;
+            }
+
+            if (writtenSamples >= totalSamples) {
+                node.disconnect();
+            }
+        };
+node.connect(analyser);
+        node.connect(audioCtx.destination);
+    });
+});
+// --- 【追加】オシロスコープ描画用のループ関数 ---
+function draw() {
+    animationFrameId = requestAnimationFrame(draw);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
     
-    if (writtenSamples >= totalSamples) {
-      node.disconnect();
-    }
-  };
+    // 時間領域の波形データを取得
+    analyser.getByteTimeDomainData(dataArray);
 
-  node.connect(audioCtx.destination);
-            });
-        });
+    // キャンバスのクリア
+    canvasCtx.fillStyle = '#111';
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // グリッド線（背景のマス目）の描画
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle = '#222';
+    canvasCtx.beginPath();
+    // 横の中央線
+    canvasCtx.moveTo(0, canvas.height / 2);
+    canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    canvasCtx.stroke();
+
+    // 波形の描画
+    canvasCtx.lineWidth = 1;
+    canvasCtx.strokeStyle = '#fff'; // サイバーなエメラルドグリーン
+    canvasCtx.beginPath();
+
+    const sliceWidth = canvas.width / bufferLength;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+        // 波形データの値（0〜255、無音時は128）をキャンバスの高さにマッピング
+        const v = dataArray[i] / 128.0;
+        const y = (v * canvas.height) / 2;
+
+        if (i === 0) {
+            canvasCtx.moveTo(x, y);
+        } else {
+            canvasCtx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
+    }
+
+    canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    canvasCtx.stroke();
+}
+// -----------------------------------------------
 </script>
 </body>
 </html>
